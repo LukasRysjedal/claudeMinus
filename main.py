@@ -1,6 +1,8 @@
 import os
+import argparse
 from dotenv import load_dotenv
 from openai import OpenAI
+
 
 
 def main():
@@ -16,21 +18,24 @@ def main():
         api_key=api_key
     )
 
-    #Send a chat completion request to the OpenRouter API
-    promt = "Why is Boot.dev such a great place to learn backend development? Use one paragraph maximum."
+    #Uses the argparse python module for the option to add an argument to the command line
+    arg_parser = argparse.ArgumentParser(description="Chatbot")
+    arg_parser.add_argument("user_prompt", type=str, help = "User prompt")
+    args = arg_parser.parse_args()
 
+    #Send a chat completion request to the OpenRouter API
     response= client.chat.completions.create(
         model="openrouter/free",
         messages=[
             {
                 "role": "user",
-                "content": f"{promt}",
+                "content": f"{args.user_prompt}",
             }
         ],
     )
 
     #Print logic
-    print(f"User promt: {promt}")
+    print(f"User promt: {args.user_prompt}")
     if response.usage != None:
         print(f"Prompt tokens: {response.usage.prompt_tokens}")
         print(f"Response tokens: {response.usage.completion_tokens}")
