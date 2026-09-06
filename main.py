@@ -17,17 +17,27 @@ def main():
     )
 
     #Send a chat completion request to the OpenRouter API
+    promt = "Why is Boot.dev such a great place to learn backend development? Use one paragraph maximum."
+
     response= client.chat.completions.create(
         model="openrouter/free",
         messages=[
             {
                 "role": "user",
-                "content": "Why is Boot.dev such a great place to learn backend development? Use one paragraph maximum.",
+                "content": f"{promt}",
             }
         ],
     )
+
+    #Print logic
+    print(f"User promt: {promt}")
+    if response.usage != None:
+        print(f"Prompt tokens: {response.usage.prompt_tokens}")
+        print(f"Response tokens: {response.usage.completion_tokens}")
+    else:
+        raise RuntimeError("Failed api request!")
     #Extract and print the text content from the first completion choice
-    print(response.choices[0].message.content)
+    print(f"Response:\n{response.choices[0].message.content}")
 
 
 if __name__ == "__main__":
