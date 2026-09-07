@@ -3,6 +3,10 @@ import argparse
 from dotenv import load_dotenv
 from openai import OpenAI
 
+#type hint
+from argparse import Namespace
+from openai.types.chat import ChatCompletion
+
 
 
 def main():
@@ -21,23 +25,28 @@ def main():
     #Uses the argparse python module for the option to add an argument to the command line
     arg_parser = argparse.ArgumentParser(description="Chatbot")
     arg_parser.add_argument("user_prompt", type=str, help = "User prompt")
+    arg_parser. add_argument("--verbose", action="store_true", help="Enables verbose output")
     args = arg_parser.parse_args()
 
     messages = [{"role": "user", "content": args.user_prompt}]
     #Send a chat completion request to the OpenRouter API
-    response= client.chat.completions.create(
+    response = client.chat.completions.create(
         model="openrouter/free",
         messages=messages,
     )
 
-    #Print logic
-    print(f"User promt: {args.user_prompt}")
-    if response.usage != None:
-        print(f"Prompt tokens: {response.usage.prompt_tokens}")
-        print(f"Response tokens: {response.usage.completion_tokens}")
-    else:
-        raise RuntimeError("Failed api request!")
-    #Extract and print the text content from the first completion choice
+    print_to_console(response, args)
+
+
+
+def print_to_console(response: ChatCompletion, args: Namespace) -> None:
+    if args.verbose:
+        print(f"User prompt: {args.user_prompt}")
+        if response.usage != None:
+            print(f"Prompt tokens: {response.usage.prompt_tokens}")
+            print(f"Response tokens: {response.usage.completion_tokens}")
+        else:
+            raise RuntimeError("Failed api request!")
     print(f"Response:\n{response.choices[0].message.content}")
 
 
