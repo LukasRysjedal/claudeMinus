@@ -23,15 +23,11 @@ def main():
     arg_parser.add_argument("user_prompt", type=str, help = "User prompt")
     args = arg_parser.parse_args()
 
+    messages = [{"role": "user", "content": args.user_prompt}]
     #Send a chat completion request to the OpenRouter API
     response= client.chat.completions.create(
         model="openrouter/free",
-        messages=[
-            {
-                "role": "user",
-                "content": f"{args.user_prompt}",
-            }
-        ],
+        messages=messages,
     )
 
     #Print logic
