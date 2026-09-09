@@ -25,18 +25,22 @@ def write_file(working_directory: str, file_path: str, content: str) -> str:
 
 
 
-schema_get_files_info = {
+schema_write_files = {
     "type": "function",
     "function": {
-        "name": "get_files_info",
-        "description": "Lists files in a specified directory relative to the working directory, providing file size and directory status",
+        "name": "write_files",
+        "description": "Opens and rewrite an existing file relative to the working directory with the content paramter",
         "parameters": {
             "type": "object",
             "properties": {
-                "directory": {
+                "file_path": {
                     "type": "string",
-                    "description": "Directory path to list files from, relative to the working directory (default is the working directory itself)",
+                    "description": "The name of the file to write to, relative to the working directory (default is the working directory itself)",
                 },
+            "content": {
+                "type": "string",
+                "description": "A sting containing the desired content to replace the existing content of the file"
+            }
             },
         },
     },

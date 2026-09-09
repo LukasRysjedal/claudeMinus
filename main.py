@@ -1,8 +1,10 @@
 import os
 import argparse
+import json
 from dotenv import load_dotenv
 from openai import OpenAI
 from system_promt import system_prompt
+from call_functions import available_functions
 
 #type hint
 from argparse import Namespace
@@ -37,10 +39,16 @@ def main():
     response = client.chat.completions.create(
         model="openrouter/free",
         messages=messages,
+        tools=available_functions,
         temperature=0,
     )
-
-    print_to_console(response, args)
+    message = response.choices[0].message
+    if message.tool_calls:
+        for tool_call in message.tool_calls:
+            function_args = json.loads(tool_call.function.arguments or {})
+            print(f"Calling function: {tool_call.function.name}({function_args})")
+    else:
+        print_to_console(response, args)
 
 
 

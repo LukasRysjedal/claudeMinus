@@ -43,18 +43,22 @@ def print_result_of_run_python(process: subprocess) -> str:
         return f"Error: executing Python file: {e}"
 
 
-schema_get_files_info = {
+schema_run_python = {
     "type": "function",
     "function": {
-        "name": "get_files_info",
-        "description": "Lists files in a specified directory relative to the working directory, providing file size and directory status",
+        "name": "run_python",
+        "description": "Runs a spesified python file with optional arguments relative to the working directory",
         "parameters": {
             "type": "object",
             "properties": {
-                "directory": {
+                "file_path": {
                     "type": "string",
-                    "description": "Directory path to list files from, relative to the working directory (default is the working directory itself)",
+                    "description": "The name of the file to be excecuted, relative to the working directory (default is the working directory itself)",
                 },
+                "args": {
+                    "type": "list[str]",
+                    "description": "A list of arguments to be parameters in the given python file, the list can be empty"
+                }
             },
         },
     },
