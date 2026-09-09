@@ -2,6 +2,7 @@ import os
 import argparse
 from dotenv import load_dotenv
 from openai import OpenAI
+from system_promt import system_prompt
 
 #type hint
 from argparse import Namespace
@@ -28,11 +29,15 @@ def main():
     arg_parser. add_argument("--verbose", action="store_true", help="Enables verbose output")
     args = arg_parser.parse_args()
 
-    messages = [{"role": "user", "content": args.user_prompt}]
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": args.user_prompt},
+        ]
     #Send a chat completion request to the OpenRouter API
     response = client.chat.completions.create(
         model="openrouter/free",
         messages=messages,
+        temperature=0,
     )
 
     print_to_console(response, args)
