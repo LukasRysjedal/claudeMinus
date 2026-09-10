@@ -11,7 +11,7 @@ def write_file(working_directory: str, file_path: str, content: str) -> str:
             return f'Error: Cannot write to "{file_path}" as it is outside the permitted working directory'
         if os.path.isdir(target_directory_path):
             return f'Error: Cannot write to "{file_path}" as it is a directory'
-        print(f'Success: "{file_path}" is within the working directory')
+        #print(f'Success: "{file_path}" is within the working directory')
     except Exception as e:
         return f"Error: {e}"
 
@@ -28,8 +28,8 @@ def write_file(working_directory: str, file_path: str, content: str) -> str:
 schema_write_files = {
     "type": "function",
     "function": {
-        "name": "write_files",
-        "description": "Opens and rewrite an existing file relative to the working directory with the content paramter",
+        "name": "write_file",
+        "description": "write to a file",
         "parameters": {
             "type": "object",
             "properties": {

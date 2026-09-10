@@ -16,7 +16,7 @@ def run_python_file(
             return f'Error: "{file_path}" does not exist or is not a regular file'
         if ".py" not in file_path:
             return f'Error: "{file_path}" is not a Python file'
-        print(f'Success: "{file_path}" is within the working directory')
+        #print(f'Success: "{file_path}" is within the working directory')
     except Exception as e:
         return f"Error: {e}"
 
@@ -46,8 +46,8 @@ def print_result_of_run_python(process: subprocess) -> str:
 schema_run_python = {
     "type": "function",
     "function": {
-        "name": "run_python",
-        "description": "Runs a spesified python file with optional arguments relative to the working directory",
+        "name": "run_python_file",
+        "description": "Run or excecute a python file",
         "parameters": {
             "type": "object",
             "properties": {

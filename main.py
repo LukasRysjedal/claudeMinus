@@ -1,10 +1,12 @@
 import os
 import argparse
 import json
+import sys
 from dotenv import load_dotenv
 from openai import OpenAI
 from system_promt import system_prompt
 from call_functions import available_functions
+from call_functions import call_function
 
 #type hint
 from argparse import Namespace
@@ -28,27 +30,42 @@ def main():
     #Uses the argparse python module for the option to add an argument to the command line
     arg_parser = argparse.ArgumentParser(description="Chatbot")
     arg_parser.add_argument("user_prompt", type=str, help = "User prompt")
-    arg_parser. add_argument("--verbose", action="store_true", help="Enables verbose output")
+    arg_parser.add_argument("--verbose", action="store_true", help="Enables verbose output")
     args = arg_parser.parse_args()
 
     messages = [
         {"role": "system", "content": system_prompt},
         {"role": "user", "content": args.user_prompt},
         ]
-    #Send a chat completion request to the OpenRouter API
-    response = client.chat.completions.create(
-        model="openrouter/free",
-        messages=messages,
-        tools=available_functions,
-        temperature=0,
-    )
-    message = response.choices[0].message
-    if message.tool_calls:
-        for tool_call in message.tool_calls:
-            function_args = json.loads(tool_call.function.arguments or {})
-            print(f"Calling function: {tool_call.function.name}({function_args})")
-    else:
-        print_to_console(response, args)
+
+    for _ in range(20):
+        #Send a chat completion request to the OpenRouter API
+        response = client.chat.completions.create(
+            model="openrouter/free",
+            messages=messages,
+            tools=available_functions,
+            temperature=0,
+        )
+        message = response.choices[0].message
+        messages.append(message)
+        if message.tool_calls:
+            for tool_call in message.tool_calls:
+                result_message = call_function(tool_call, args.verbose)
+                messages.append(result_message)
+                if not result_message.get("content"):
+                    raise Exception("Error: content is empty")
+                if args.verbose:
+                    print(f"-> {result_message['content']}")
+        else:
+            print_to_console(response, args)
+            return
+    print("Error, the ai couldnt find an answer")
+    sys.exit(1)
+
+
+
+
+
 
 
 

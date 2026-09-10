@@ -12,7 +12,7 @@ def get_file_content(working_directory: str, file_path: str) -> str:
             return f'Error: Cannot read "{file_path}" as it is outside the permitted working directory'
         if not os.path.isfile(target_directory_path):
             return f'Error: File not found or is not a regular file: "{file_path}"'
-        print(f'Success: "{file_path}" is within the working directory')
+        #print(f'Success: "{file_path}" is within the working directory')
     except Exception as e:
         return f"Error: {e}"
 
